@@ -1,0 +1,212 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+struct SinhVien
+{
+    int ma,n ;
+    char ten[150];
+    float diem1;
+    float diem2;
+    float diem3;
+    float diem4;
+    float diem5;
+    float a;
+    float b;
+};
+struct Node
+{
+    SinhVien *data;
+    Node *Next;
+};
+struct LienKetDon
+{
+    Node *Head;
+};
+void Dslk(LienKetDon *&list)
+{
+    list=new LienKetDon;
+    list->Head=NULL;
+}
+SinhVien *NhapSinhVien()
+{
+		float a,b;
+    SinhVien *sv=new SinhVien;
+    cout<<endl;
+    cout<<"Nhap MSSV:";
+    cin>>sv->ma;
+    cin.ignore();
+    cout<<"Nhap ho va ten:";
+    gets(sv->ten);
+    cout<<"nhap diem giai tich: ";
+    cin>>sv->diem1;
+    cout<<"nhap diem ly thuyet mach: ";
+    cin>>sv->diem2;
+    cout<<"nhap diem ly thuyet sac xuat: ";
+    cin>>sv->diem3;
+    cout<<"nhap diem triet hoc maclenin: ";
+    cin>>sv->diem4;
+    cout<<"nhap diem ky thuat lap trinh: ";
+    cin>>sv->diem5;
+    a=(sv->diem1+sv->diem2+sv->diem3+sv->diem4+sv->diem5)/5;
+    b=a*4/10;
+    cout<<"diem trung binh thang he 10 la: "<<a<<"/10"<<endl;
+    cout<<"diem trung binh thang he 4 la: "<<b<<"/4"<<endl;
+    if(a>8){
+    	cout<<"Sinh vien loai gioi "<<endl;
+	}else if (a>6){
+		cout<<"Sinh vien loai kha"<<endl;
+	}else if(a>4){
+		cout<<"Sinh vien loai trung binh"<<endl;
+	} else{
+		cout<<"Sinh Vien loai kem"<<endl;
+	}
+	if(sv->diem1>=4&&sv->diem2>=4&&sv->diem3>=4&&sv->diem4>=4&&sv->diem5>=4){
+		cout<<"---Chuc mung ban da qua tat ca cac mon hoc---"<<endl;
+	} else if(sv->diem1<=1||sv->diem2<=1||sv->diem3<=1||sv->diem4<=1||sv->diem5<=1){
+		cout<<"----CANH CAO HOC TAP!!!----"<<endl;
+		cout<<"***ban co mon hoc chua du yeu cau, can co gang cai thien***"<<endl;
+	}
+    return sv;
+}
+Node *Taonode(SinhVien *sv)
+{
+    Node *pNode=new Node;
+    if(pNode!=NULL)
+    {
+        pNode->data=sv;
+        pNode->Next=NULL;
+    }
+    else
+    {
+        cout<<"cap phat bo nho that bai!!!";
+    }
+    return pNode;
+}
+void chencuoi(LienKetDon *&list,SinhVien *sv)
+{
+    Node *pNode=Taonode(sv);
+    if(list->Head==NULL)
+    {
+        list->Head=pNode;
+    }
+    else
+    {
+        Node *pTmp=list->Head;
+         
+        while(pTmp->Next!=NULL)
+        {
+            pTmp=pTmp->Next;
+        }
+        pTmp->Next=pNode;
+    }
+}
+void Indanhsach(LienKetDon *list)
+{
+    Node *pTmp=list->Head;
+    if(pTmp==NULL)
+    {
+        cout<<"Danh sach rong";
+        return;
+    }
+    while(pTmp!=NULL)
+    {
+        SinhVien *sv=pTmp->data;
+        cout<<sv->ma<<"\t"<<sv->ten<<"\n";
+        pTmp=pTmp->Next;
+    }
+}
+void Sapxep(LienKetDon *&list)
+{
+    for(Node *pTmp=list->Head;pTmp!=NULL;pTmp=pTmp->Next)
+    {
+        for(Node *pTmp2=pTmp->Next;pTmp2!=NULL;pTmp2=pTmp2->Next)
+        {   
+            SinhVien *svTmp=pTmp->data;
+            SinhVien *svTmp2=pTmp2->data;
+            if(svTmp2->ma<svTmp->ma)
+            {
+                int ma=svTmp->ma;
+                char ten[150];
+                strcpy(ten,svTmp->ten);
+                 
+                svTmp->ma=svTmp2->ma;
+                strcpy(svTmp->ten,svTmp2->ten);
+                svTmp2->ma=ma;
+                strcpy(svTmp2->ten,ten);             
+            }
+        }   
+    }
+}
+void Xoamssv(LienKetDon *&list,int ma)
+{
+    Node *pDel=list->Head;
+    if(pDel==NULL)
+    {
+        cout<<"Danh sach rong!";
+    }
+    else
+    {
+        Node *pPre=NULL;
+        while(pDel!=NULL)
+        {
+            SinhVien *sv=pDel->data;
+            if(sv->ma==ma)
+                break;
+            pPre=pDel;
+            pDel=pDel->Next;
+        }
+        if(pDel==NULL)
+        {
+            cout<<"khong tim thay MSSV: "<<ma;
+        }
+        else
+        {
+            if(pDel==list->Head)
+            {
+                list->Head=list->Head->Next;
+                pDel->Next=NULL;
+                delete pDel;
+                pDel=NULL;
+            }
+            else
+            {
+                pPre->Next=pDel->Next;
+                pDel->Next=NULL;
+                delete pDel;
+                pDel=NULL;
+            }
+        }
+    }
+}
+int main(int argc, char** argv) {
+	cout<<endl;
+	cout<<".CHAO CO VA CAC BAN DA XEM BAI CODE CUA TUI EM."<<endl;
+	cout<<"-----BAI TAP LON: QUAN LI SINH VIEN-----"<<endl;
+
+    LienKetDon *list;
+   	Dslk(list);
+    SinhVien *name1=NhapSinhVien();
+    chencuoi(list,name1);
+    SinhVien *name2=NhapSinhVien();
+    chencuoi(list,name2);
+    SinhVien *name3=NhapSinhVien();
+   	chencuoi(list,name3);
+   	SinhVien *name4=NhapSinhVien();
+   	chencuoi(list,name4);
+   	cout<<endl;
+    cout<<"Danh Sach SinhVien"<<endl;
+    Indanhsach(list);
+	Sapxep(list);
+    cout<<"Sau khi sap xep: "<<endl;
+    cout<<endl;
+    Indanhsach(list);
+    cout<<endl;
+    cout<<"Ban muon xoa sinh vien co MSSV: "<<endl;
+    int ma;
+    cin>>ma;
+    Xoamssv(list,ma);
+    cout<<endl;
+    cout<<"Sau khi xoa:"<<endl;
+    Indanhsach(list);
+    
+}
